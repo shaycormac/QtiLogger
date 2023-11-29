@@ -339,7 +339,10 @@ int LogcatLogger::createLogFile( void )
 
     return -1;
 }
-
+/**
+ * logcat 录制日志
+ * @return
+ */
 int LogcatLogger::startCaptureLog( void )
 {
     List<LogcatDevice>::iterator i;
@@ -428,7 +431,7 @@ repeat:
             redo = true;
             break;
         }
-        /*read the log messages*/
+        /*read the log messages 读取logcat的日志*/
         ret = android_logger_list_read( ploggerList, &log_msg );
 
         if (ret == 0)
@@ -506,7 +509,10 @@ repeat:
     return 0;
 
 }
-
+/**
+ *  开始读取数据，写入文件
+ * @param device
+ */
 void LogcatLogger::printStart( const String8& device )
 {
     char buf[1024];

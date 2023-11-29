@@ -49,6 +49,7 @@ bool BugReportDevice::threadLoop()
 {
     ALOGD( "%s threadLoop run!\n", getName().string() );
 
+    // 看看真正机器下面有这个路径的可执行文件么 ,有的
     const String8 bugreport("/system/bin/bugreport > ");
     String8 timeStamp("");
     generateTimestamp( timeStamp );

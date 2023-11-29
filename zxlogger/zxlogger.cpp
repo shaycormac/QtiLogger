@@ -205,6 +205,7 @@ int LogDeviceBase::readFile(const String8 &file) {
 
     generateTimestamp(timeStamp);
 
+    // mode 就是枚举的那几种
     if (mode == "normal") {
         fileName = logPath + "/" + logDir + "/" + logFileName + "." + timeStamp;
     } else {
@@ -223,7 +224,9 @@ int LogDeviceBase::readFile(const String8 &file) {
     }
     ALOGD("logFileName is %s  \n", fileName.string());
 
+    // 打开给的路径，进行读数据，譬如 /proc/kmsg 路径
     rfd = open(srcFile.string(), O_RDONLY, 0);
+    // 打开要往里面写上面流的文件
     wfd = open(fileName.string(), O_WRONLY | O_CREAT, 0);
 
     if (rfd >= 0 && wfd >= 0) {
@@ -231,6 +234,7 @@ int LogDeviceBase::readFile(const String8 &file) {
         bsize = bufSize;
         total = 0;
 
+        // 只要有数据，就不停的读写
         for (;;) {
             if ((nr = read(rfd, buf, bsize)) > 0) {
                 for (off = 0; nr; nr -= nw, off += nw) {
@@ -241,6 +245,7 @@ int LogDeviceBase::readFile(const String8 &file) {
                     }
                 }
 
+                // 重新换 新的文件
                 if (logMaxSize && total >= logMaxSize) {
 
                     generateTimestamp(timeStamp);
@@ -291,7 +296,11 @@ status_t LogDeviceBase::readyToRun() {
     createDirectory(logPath, logDir);
     return NO_ERROR;
 }
-
+/**
+ *  这个类实际上是一个thread
+ * @param devName
+ * @return
+ */
 LogDeviceBase::_LogDeviceBase(const String8 &devName) : Thread(false) {
     /*init Variables*/
     //ALOGD("%s Device Constructors!\n", devName.string());
@@ -314,17 +323,26 @@ LogDeviceBase::_LogDeviceBase(const String8 &devName) : Thread(false) {
     logMaxSize = 0;
     threadId = 0;
 }
-
+/**
+ *  解构方法
+ */
 LogDeviceBase::~_LogDeviceBase() {
     ALOGE("%s Device Destructors!\n", name.string());
 }
 
+/**
+ *  真正入口方法
+ * @param argc  通过rc解析文件传过来！！
+ * @param argv
+ * @return
+ */
 int main(int argc, char **argv) {
 
     char propbuf[100];
     ConfigData logConfig;
     String8 logPath;
     String8 logMaskPath;
+    // 默认是正常启动方法
     String8 mode = String8("normal");
     int maxFiles = 0;
     unsigned int logMaxSize;
@@ -332,6 +350,7 @@ int main(int argc, char **argv) {
     logConfig.read(argc, argv);
     logConfig.getLogPath(logPath);
     ALOGD("logger getLogPath %s\n", logPath.c_str());
+    // 重新赋值
     logConfig.getMode(mode);
     maxFiles = logConfig.getMaxFiles();
     ALOGD("logger getMode %s\n", mode.c_str());
@@ -352,7 +371,7 @@ int main(int argc, char **argv) {
 
     }
 
-    //DynamicDevice dynamic;
+    //DynamicDevice dynamic; keneral 日志
     KmsgLogDevice kmsglog;
 
     if (logConfig.isLogEnable(kmsglog.getName())) {
@@ -450,6 +469,7 @@ int main(int argc, char **argv) {
         Netlog.setMaxFiles(maxFiles);
         Netlog.setLogPath(logPath);
         Netlog.setLogMaxSize(logMaxSize);
+        // run 是线程的方法，说明开始启动了
         Netlog.run(Netlog.getName().string());
         ALOGD("logger Netlog run\n");
     }
@@ -460,6 +480,7 @@ int main(int argc, char **argv) {
     SystemLogDevice Systemlog;
     CrashLogDevice Crashlog;
     if (logConfig.isLogEnable(Mainlog.getName())) {
+        // 分为不同的模式 boot挂起监视器模式？？
         if (mode == "boot_hung_monitor") {
             /*boot_main*/
             Mainlog.setLogDirectory(String8("bhm"));
@@ -533,6 +554,7 @@ int main(int argc, char **argv) {
         ALOGD("logger Mainlog Systemlog Radiolog Eventlog Crashlog run\n");
     }
 
+    // 线程需要永远looper下去
     for (;;) {
         sleep(60);
     }

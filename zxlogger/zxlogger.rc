@@ -2,6 +2,7 @@ on post-fs-data
     mkdir /data/zxlog 0755 root root
 
 on property:sys.boot_completed=1
+# 这个好像路径也没有啊，只有 module
     write /sys/module/boot_hung_monitor/parameters/boot_completed "1"
     stop zxboothung
 

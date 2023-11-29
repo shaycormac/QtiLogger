@@ -61,6 +61,7 @@ const int DynamicDevice::maxKeyNum = 3;
 
 DynamicDevice::keyProp DynamicDevice::keys[maxKeyNum] =
 {
+        // 第一个值在310机器上是有的,第二个第三个，好像没有哎！！！
     { String8("level"), String8("/proc/sys/kernel/printk"),  String8(""),     String8("")   },
     { String8("func") , String8("/d/dynamic_debug/control"), String8("func"), String8("+p") },
     { String8("file") , String8("/d/dynamic_debug/control"), String8("file"), String8("+p") },

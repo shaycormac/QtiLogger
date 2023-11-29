@@ -49,8 +49,9 @@ bool KmsgLogDevice::threadLoop()
 {
     printf( "%s threadLoop run!\n", getName().string() );
 
+    // 读 kmsg里面的数据
     readFile( String8("/proc/kmsg") );
-
+   // 永远不停止
     for ( ;; )
     {
         sleep( 60 );

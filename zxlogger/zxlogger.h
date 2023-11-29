@@ -13,6 +13,7 @@
 using namespace android;
 
 /*define log device base class*/
+// _LogDeviceBase 也是一个线程的子类
 typedef class _LogDeviceBase : public Thread
 {
 
@@ -22,6 +23,7 @@ private:
     pthread_t threadId;
 
     int createDirectory( const String8& path, const String8& dir = String8("") );
+    // 准备启动
     virtual status_t readyToRun();
 
 protected:
@@ -63,6 +65,7 @@ typedef class _KmsgLogDevice : public LogDeviceBase
 public:
 
     _KmsgLogDevice( const String8& devName = String8("dmesg") ):LogDeviceBase( devName ){};
+    // 需要子类实现，虚方法
     virtual bool threadLoop();
 
 }KmsgLogDevice;

@@ -49,6 +49,7 @@ bool QseeLogDevice::threadLoop()
 {
     printf( "%s threadLoop run!\n", getName().string() );
 
+    // 这个玩意，好像没有啊！！
     readFile( String8("/d/tzdbg/qsee_log") );
 
     for ( ;; )
