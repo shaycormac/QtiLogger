@@ -71,7 +71,7 @@ on property:debug.sys.logger.tcpdump_wlan=1
 
 on property:debug.sys.logger.tcpdump_wlan=0
     stop mytcpdumpwlan
-
+# diag_mdlog 在A310中运行的文件中是存在的，剩余的二进制可执行文件都没有，卧槽！！
 service start_diag_mdlog /vendor/bin/diag_mdlog -f /vendor/etc/modemmask.cfg -s 50 -o /storage/emulated/0/zxlog/temp/modem -c
     class main
     user root
