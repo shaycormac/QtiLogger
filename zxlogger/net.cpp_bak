@@ -47,7 +47,10 @@
 
 
 using namespace android;
-
+/**
+ *  获取net 命令
+ * @return
+ */
 bool NetLogDevice::threadLoop()
 {
 

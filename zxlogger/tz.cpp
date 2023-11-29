@@ -44,11 +44,18 @@
 
 
 using namespace android;
-
+/**
+ *  todo 所以这个日志看看是否要拿掉！！
+ * @return
+ */
 bool TzLogDevice::threadLoop()
 {
     printf( "%s threadLoop run!\n", getName().string() );
-
+   // 这个是TrustZone 日志，可是目前A310上 d下面是空的目录，啥也没有，不像普通手机那样
+    // sc126:/ # cd d
+    // system/bin/sh: cd: /d: No such file or directory
+    // 2|sc126:/ # cd /sys/kernel/debug
+    // system/bin/sh: cd: /sys/kernel/debug: No such file or directory
     readFile( String8("/d/tzdbg/log") );
 
     for ( ;; )

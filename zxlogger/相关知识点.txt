@@ -1,0 +1,65 @@
+
+
+ diag_mdlog
+         这是高通提供的抓取qxdm log的东东。
+
+         既包括AP端得，也包括BP端的；或者跟选择端口有关系,8064ap和modem端口独立；
+
+
+
+         代码位置：\vendor\qcom\proprietary\diag\mdlog\
+
+
+
+         使用diag_mdlog这个可执行程序来抓取log
+
+                   需要Diag.cfg文件来配置过滤项，选择需要的Log信息。在使用前必须放置一个Diag.cfg文件。
+
+                   Diag.cfg文件可以用QXDM生成；可以通过F12，Filtered View /Config 来生成Diag.cfg
+
+
+
+         这个程序一次只能执行一个，可以用kill -9 PID 将其强制结束
+
+
+  https://www.cnblogs.com/bastard/archive/2013/05/03/3056985.html
+
+
+
+  https://blog.csdn.net/dachai/article/details/103807529
+
+  一、kernel configuration
+  在编译时，需要设置
+
+  CONFIG_DYNAMIC_DEBUG=y
+
+  CONFIG_DEBUG_FS=y
+
+  打开这个配置之后，kernel会提供一个debugfs control file：/sys/kernel/debug/dynamic_debug/control
+
+  通过这个文件，可以在运行时打开/关闭dynamic debugging statement。
+
+  debugging statement可以通过filename/module/function/line number来匹配。
+
+  往dynamic_debug debugfs中写入的内容主要是operations+flags；
+
+  其中operation有以下三种:
+
+     +：add the given flags;
+
+     -： remove the given flags；
+
+     =：set the dyndbg flags to the given flags；
+
+  其中flags包括：
+
+     p：enable the pr_debug() callsite；
+
+     f/l/m/t：include the function name、line number、module name、threadID in the printed message；
+
+  比如，想要打开svcsock.c文件中，line 1603中的pr_debug，可以设置
+
+  # echo "file svcsock.c line 1603 +p" > /sys/kernel/debug/dynamic_debug/control；
+
+
+

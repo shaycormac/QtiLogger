@@ -82,6 +82,7 @@ bool ModemLogDevice::threadLoop()
     }
 
     //system( cmd.string() );
+    // 通过设置这个，来在rc文件中调用服务
     property_set("debug.sys.logger.modem","1");
 
     for ( ;; )

@@ -44,7 +44,10 @@
 
 
 using namespace android;
-
+/**
+ * tcpdump 是很有用的，对于TCP/IP协议相关的都可以使用这个来抓
+ * @return
+ */
 bool NetDevice::threadLoop()
 {
     ALOGD( "%s threadLoop run!\n", getName().string() );
@@ -52,18 +55,21 @@ bool NetDevice::threadLoop()
     char propbuf[100];
     //String8 net;
     //String8 tname;
+    // 目前项目中没有这个值
     property_get("persist.netlog.option", propbuf, "all");
     if (!strncmp(propbuf, "wlan", 4)) {
         //String8 wlan("/system/bin/mytcpdump -p -i wlan0 -vv -s 0 -w ");
         //net = wlan.string();
         //tname = "wlan";
         ALOGD( "debug.sys.logger.tcpdump_wlan  >> 1 \n");
+        // 这个也没有
         property_set("debug.sys.logger.tcpdump_wlan","1");
     } else {
         //String8 all("/system/bin/mytcpdump -p -i any -vv -s 0 -w ");
         //net = all.string();
         //tname = "all";
         ALOGD( "debug.sys.logger.tcpdump_all  >> 1 \n");
+        // 这个也没有
         property_set("debug.sys.logger.tcpdump_all","1");
     }
     //String8 timeStamp("");
