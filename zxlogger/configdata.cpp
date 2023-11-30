@@ -46,30 +46,40 @@
 using namespace android;
 
 /*------------------------DATA class----------------------*/
-
+// 默认日志大小是12M
 const unsigned int DATA::defaultLogMaxSize = 12*1024*1024;//12M
 
-
+/**
+ *  DATA的初始化
+ * @return
+ */
 int DATA::init( void )
 {
 
     mode = "normal";//default normal mode
     logPath = "/storage/emulated/0/zxlog/temp";
+    // 这俩玩意是在编译的时候，注入进去的，后期看看裁减的时候，需要干掉？
     modemLogMaskPath = "/vendor/etc/modemmask.cfg";
     dynamicLogMaskPath = "/vendor/etc/dynamic.cfg";
-    
+    // 哦，下面就是支持的，我们要裁减
     addCommonData( String8("dmesg") );
     addCommonData( String8("qsee") );
     addCommonData( String8("tz") );
     addCommonData( String8("main") );
     addCommonData( String8("net") );
     addCommonData( String8("bugreport") );
+    // modem这么小，一次才给100个byte?
     addCommonData( String8("modem") ,100 );
 
     return 0;
 }
 
-
+/**
+ *  往集合中添加配置
+ * @param _logName
+ * @param size
+ * @return
+ */
 int DATA::addCommonData( const String8& _logName, unsigned int size )
 {
 
@@ -77,7 +87,12 @@ int DATA::addCommonData( const String8& _logName, unsigned int size )
     return 0;
 
 }
-
+/**
+ *  todo 这个是处理 prop属性的？
+ * @param str
+ * @param pattern
+ * @return
+ */
 int DATA::split(const String8& str, const String8& pattern)
 {
     size_t pos = 0;  
@@ -98,7 +113,11 @@ int DATA::split(const String8& str, const String8& pattern)
     }  
     return 0; 
 }
-
+/**
+ *  查看字符串是否是cfg配置
+ * @param str
+ * @return
+ */
 int DATA::isVailLogMaskPath(const String8& str)
 {
     String8 path;
@@ -111,7 +130,10 @@ int DATA::isVailLogMaskPath(const String8& str)
     
     return -1;
 }
-
+/**
+ *  通过cfg来确实是否使用特殊模式，即是否含有cfg文件
+ * @return
+ */
 int DATA::userSpecifyLogMask( void )
 {
     List<String8>::iterator i;
@@ -298,7 +320,11 @@ int ArgvData::saveArgv( const String8& key, const String8& value )
     return 0;
 
 }
-
+/**
+ *  是否是除了正常启动的其他模式，譬如boot recovery等
+ * @param out
+ * @return
+ */
 bool ArgvData::isSpecialMode( String8& out )
 {
     //----->
@@ -319,7 +345,12 @@ int ArgvData::getPath( String8& out )
     out = path.string();
     return 0;
 }
-
+/**
+ *  读取参数，拿到key value 值存放到 args中
+ * @param argc
+ * @param argv
+ * @return
+ */
 int ArgvData::read( int argc, char** argv )
 {
     int k = argc;
@@ -389,7 +420,7 @@ int ArgvData::read( int argc, char** argv )
 
 
 /*----------------------------propertyData class-----------*/
-
+// 行吧，这个属性默认值就是 persist.sys.logger.config 目前并没有
 const String8 PropertyData::propertyName = String8("persist.sys.logger.config");
 
 bool PropertyData::isDebugMode( void )
@@ -406,7 +437,10 @@ bool PropertyData::isDebugMode( void )
    return true;
 
 }
-
+/**
+ *  属性的读取
+ * @return
+ */
 int PropertyData::read( void )
 {
    char propbuf[100];
@@ -453,7 +487,12 @@ int PropertyData::read( void )
 
 /*-------------------------configData class----------------*/
 
-
+/**
+ *  这个是最大的，那结果会走哪个呢？
+ * @param argc
+ * @param argv
+ * @return
+ */
 int ConfigData::read( int argc, char** argv )
 {
     String8 mode;
@@ -499,6 +538,7 @@ int ConfigData::read( int argc, char** argv )
             argvData.configLogPath( String8("/data/local/tmp/recovery") );
             argvData.configLogEnable( String8("dmesg"), true );
         }
+        // 关机充电模式
         else if (mode == "poweroffcharger")
         {
             /*oh,in poweroffcharger mode,capture power off charger log*/
@@ -557,6 +597,11 @@ int ConfigData::read( int argc, char** argv )
 
 }
 
+/**
+ *  下面这些方法必须都是DataBase
+ * @param mode
+ * @return
+ */
 int ConfigData::getMode( String8& mode )
 {
     if (DataBase)

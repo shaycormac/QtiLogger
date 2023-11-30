@@ -2,7 +2,7 @@ on post-fs-data
     mkdir /data/zxlog 0755 root root
 
 on property:sys.boot_completed=1
-# 这个好像路径也没有啊，只有 module
+# 这个好像路径也没有啊，只有 module，难道含义是会自己写么？如果失败了呢,这个回头在看，开机启动后，会被干掉这个服务
     write /sys/module/boot_hung_monitor/parameters/boot_completed "1"
     stop zxboothung
 
@@ -26,7 +26,7 @@ service zxboothung /vendor/bin/zxlogger <mode=boot_hung_monitor>
     group root system
     oneshot
     seclabel u:r:zxboothung:s0
-
+# log拷贝服务
 service logcp /vendor/bin/sh /vendor/bin/logcp.sh
     class main
     user root
@@ -34,7 +34,7 @@ service logcp /vendor/bin/sh /vendor/bin/logcp.sh
     oneshot
     disabled
     seclabel u:r:logcp:s0
-
+# 这个服务好像不行啊，执行的脚本路径不对
 service modem /vendor/bin/sh /vendor/bin/modem.sh
     class main
     user root
@@ -43,6 +43,7 @@ service modem /vendor/bin/sh /vendor/bin/modem.sh
     disabled
     seclabel u:r:modem:s0
 
+# 谁会给他赋值呢？
 on property:debug.sys.logger.running=1
     start zxlogger
     stop zxbootlogger
@@ -101,7 +102,7 @@ service mytcpdumpwlan /vendor/bin/mytcpdump -ennXXSs0 -i wlan0 -C 50 -W 2 -w /st
     group root
     oneshot
     disabled
-
+# 这个启动的时候，好像啥也没有给呀
 service zxlogger /vendor/bin/zxlogger
     class main
     user root

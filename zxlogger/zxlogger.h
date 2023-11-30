@@ -13,37 +13,43 @@
 using namespace android;
 
 /*define log device base class*/
-// _LogDeviceBase 也是一个线程的子类
+// _LogDeviceBase 是继承线程的一个子类
 typedef class _LogDeviceBase : public Thread
 {
 
 private:
-
+   // 线程名字
     String8 name;
+    // 线程id
     pthread_t threadId;
-
+    // 创建存放日志的目录
     int createDirectory( const String8& path, const String8& dir = String8("") );
-    // 准备启动
+    // 准备启动，虚方法
     virtual status_t readyToRun();
 
 protected:
-
+ // 日志的路径，所在目录，权限，名字以及大小
     String8 logPath;
     String8 logDir;
     String8 logMaskPath;
     String8 logFileName;
     unsigned int logMaxSize;
-
+// 日志所属与的类型
     String8 mode;
+    // 最大日志个数
     int maxFiles;
+    // 自动生成的时间辍
     int generateTimestamp( String8& timeStamp );
+    // 这是干啥的？
     int split_string(char *split_str[],int split_max_num, char *str, char c);
+    // 核心的处理文件
     int readFile( const String8& file );
 
 public:
 
     _LogDeviceBase( const String8& devName );
     virtual ~_LogDeviceBase();
+    // 线程名字？
     String8 getName( void );
     int setMode( const String8& _mode );
     int setMaxFiles( int max );
@@ -64,6 +70,7 @@ typedef class _KmsgLogDevice : public LogDeviceBase
 
 public:
 
+  // 赋值给线程的名字
     _KmsgLogDevice( const String8& devName = String8("dmesg") ):LogDeviceBase( devName ){};
     // 需要子类实现，虚方法
     virtual bool threadLoop();

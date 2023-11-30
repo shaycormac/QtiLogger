@@ -111,7 +111,12 @@ int LogDeviceBase::setLogFileName(const String8 &fileName) {
 String8 LogDeviceBase::getName(void) {
     return name;
 }
-
+/**
+ *  看看这个实现方法
+ * @param path
+ * @param dir
+ * @return
+ */
 int LogDeviceBase::createDirectory(const String8 &path, const String8 &dir) {
     String8 fullPath;
     DIR *diretory = NULL;
@@ -184,8 +189,13 @@ int LogDeviceBase::generateTimestamp(String8 &timeStamp) {
 
     return 0;
 }
-
+/**
+ *  核心读取方法
+ * @param file
+ * @return
+ */
 int LogDeviceBase::readFile(const String8 &file) {
+    // 设置读取大小4096byte
     const int bufSize = 4096;
     String8 srcFile = String8(file.string());
     String8 fileName("");
@@ -205,7 +215,7 @@ int LogDeviceBase::readFile(const String8 &file) {
 
     generateTimestamp(timeStamp);
 
-    // mode 就是枚举的那几种
+    // mode 就是抓取几种的日志类型
     if (mode == "normal") {
         fileName = logPath + "/" + logDir + "/" + logFileName + "." + timeStamp;
     } else {
@@ -332,8 +342,8 @@ LogDeviceBase::~_LogDeviceBase() {
 
 /**
  *  真正入口方法
- * @param argc  通过rc解析文件传过来！！
- * @param argv
+ * @param argc  通过rc解析文件传过来 argv的参数个数
+ * @param argv 数组
  * @return
  */
 int main(int argc, char **argv) {
@@ -346,8 +356,9 @@ int main(int argc, char **argv) {
     String8 mode = String8("normal");
     int maxFiles = 0;
     unsigned int logMaxSize;
-
+    // 开始读取传过来的数组
     logConfig.read(argc, argv);
+    // 通过这个方法，拿到日志的路径，并赋值给logPath,默认路径是 /storage/emulated/0/zxlog/temp
     logConfig.getLogPath(logPath);
     ALOGD("logger getLogPath %s\n", logPath.c_str());
     // 重新赋值
@@ -395,6 +406,7 @@ int main(int argc, char **argv) {
         kmsglog.setMaxFiles(maxFiles);
         kmsglog.setLogPath(logPath);
         kmsglog.setLogMaxSize(logMaxSize);
+        // 线程执行了
         kmsglog.run(kmsglog.getName().string());
         ALOGD("logger kmsglog run\n");
     }

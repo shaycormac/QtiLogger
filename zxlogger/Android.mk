@@ -19,9 +19,9 @@ LOCAL_SRC_FILES:= \
 LOCAL_MODULE:= zxlogger
 # 无论是在user，eng版本，都可以编译
 LOCAL_MODULE_TAGS := optional
-# 将被rc执行的脚本，是在vendor/ 下面还是在 product下面呢？
+# 将被rc执行的脚本，是在vendor/下的脚本
 LOCAL_INIT_RC := zxlogger.rc
-# 表明这个必须在vendor 供应商下面的目录中
+# 表明这个必须在vendor 即高通供应商下面的目录中
 LOCAL_PROPRIETARY_MODULE := true
 # 依赖的静态库
 LOCAL_STATIC_LIBRARIES += libcutils
@@ -29,7 +29,7 @@ LOCAL_STATIC_LIBRARIES += libcutils
 LOCAL_SHARED_LIBRARIES := \
 			liblog\
 			libutils
-# 这是一个可以执行的二进制文件
+# 最终输出一个可以执行的二进制文件
 include $(BUILD_EXECUTABLE) 
 
 include $(CLEAR_VARS)
@@ -50,6 +50,7 @@ LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_SUFFIX := .cfg
 include $(BUILD_PREBUILT)
 
+# 这个模块目的是拷贝蓝牙和boot启动的日志
 include $(CLEAR_VARS)
 LOCAL_MODULE := logcp
 LOCAL_PROPRIETARY_MODULE := true
@@ -74,6 +75,7 @@ LOCAL_POST_INSTALL_CMD := \
         chmod 6755 $(LOCAL_MODULE_PATH)/$(LOCAL_SRC_FILES)
 include $(BUILD_PREBUILT)
 
+# 自定义的tcp,为啥要自定义的？
 include $(CLEAR_VARS)
 LOCAL_MODULE := mytcpdump
 LOCAL_PROPRIETARY_MODULE := true
