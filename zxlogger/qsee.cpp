@@ -53,6 +53,7 @@ bool QseeLogDevice::threadLoop()
     printf( "%s threadLoop run!\n", getName().string() );
 
     // 这个玩意，好像没有啊！！，对的，这个是拿QSSE日志的，但是板子下面根本就没有这个路径
+    // A227这个路径是由的
     readFile( String8("/d/tzdbg/qsee_log") );
 
     for ( ;; )

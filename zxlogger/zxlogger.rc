@@ -35,6 +35,7 @@ service logcp /vendor/bin/sh /vendor/bin/logcp.sh
     disabled
     seclabel u:r:logcp:s0
 # 这个服务好像不行啊，执行的脚本路径不对
+# 最新發現，好像沒有執行艾，醉了～
 service modem /vendor/bin/sh /vendor/bin/modem.sh
     class main
     user root
@@ -92,8 +93,8 @@ service mytcpdump /vendor/bin/mytcpdump -ennXXSs0 -i any -C 50 -W 2 -w /storage/
     class main
     user root
     group root
-    # 这个是不是写错了，应该是 oneshot?
-    oneshotmyt
+    # 这个是不是写错了，不是oneshotmyt,而应该是 oneshot? oneshot 表示服务只执行一次
+    oneshot
     disabled
 
 service mytcpdumpwlan /vendor/bin/mytcpdump -ennXXSs0 -i wlan0 -C 50 -W 2 -w /storage/emulated/0/zxlog/temp/net/net_wlan.cap

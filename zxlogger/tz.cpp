@@ -56,6 +56,7 @@ bool TzLogDevice::threadLoop()
     // system/bin/sh: cd: /d: No such file or directory
     // 2|sc126:/ # cd /sys/kernel/debug
     // system/bin/sh: cd: /sys/kernel/debug: No such file or directory
+    // A227这个路径是由的
     readFile( String8("/d/tzdbg/log") );
 
     for ( ;; )

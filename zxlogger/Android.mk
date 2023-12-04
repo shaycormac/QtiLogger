@@ -64,6 +64,7 @@ LOCAL_POST_INSTALL_CMD := \
         chmod 6755 $(LOCAL_MODULE_PATH)/$(LOCAL_SRC_FILES)
 include $(BUILD_PREBUILT)
 
+# 這個sh好像最終都沒有機會執行呢
 include $(CLEAR_VARS)
 LOCAL_MODULE := modem
 LOCAL_PROPRIETARY_MODULE := true

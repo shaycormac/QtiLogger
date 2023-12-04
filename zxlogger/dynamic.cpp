@@ -64,6 +64,7 @@ DynamicDevice::keyProp DynamicDevice::keys[maxKeyNum] =
         // 第一个值在310机器上是有的,第二个第三个，好像没有哎！！！
     { String8("level"), String8("/proc/sys/kernel/printk"),  String8(""),     String8("")   },
         // 也许d是 debug缩写把，android根目录确实有 d，不过是一个链接，指向了  lrw-r--r--   1 root   root         17 2009-01-01 08:00 d -> /sys/kernel/debug ,而A310机器上debug直接没有
+        // A227上目前這個目錄也沒有，移除掉吧
     { String8("func") , String8("/d/dynamic_debug/control"), String8("func"), String8("+p") },
     { String8("file") , String8("/d/dynamic_debug/control"), String8("file"), String8("+p") },
 };
